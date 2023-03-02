@@ -1,6 +1,6 @@
 import {HardhatUserConfig} from "hardhat/config";
-require('@openzeppelin/hardhat-upgrades');
 import "@nomicfoundation/hardhat-toolbox";
+require('@openzeppelin/hardhat-upgrades');
 
 const {privateKey} = require('./secret.json');
 
