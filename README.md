@@ -22,7 +22,7 @@ npx hardhat
 ```
 # Run project
 ```shell
-npx hardhat run scripts/deploy.js --network testnet
+npx hardhat run scripts/deploy.ts --network testnet
 
 run task
 npx hardhat taskName
