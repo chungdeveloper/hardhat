@@ -18,6 +18,14 @@ npm init --yes
 npm install --save-dev hardhat
 npm install @nomicfoundation/hardhat-toolbox
 
+Install hardhat proxy
+npm install --save-dev @openzeppelin/hardhat-upgrades
+npm install --save-dev @nomiclabs/hardhat-ethers ethers # peer dependencies
+register in hardhat.config.js
+require('@openzeppelin/hardhat-upgrades');
+use 
+const { ethers, upgrades } = require("hardhat");
+
 npx hardhat
 ```
 # Run project

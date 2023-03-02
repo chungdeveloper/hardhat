@@ -2,9 +2,10 @@
 pragma solidity ^0.8.9;
 
 import "../contracts/interface/IHardHatContract.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract HardHatContract is IHardHatContract {
-
+    using SafeMath for uint256;
     address private owner;
 
     constructor(){
@@ -15,7 +16,7 @@ contract HardHatContract is IHardHatContract {
 
     function addBalance() public payable {
         require(msg.value > 0, "Balance must be > 0");
-        balances[msg.sender] = msg.value;
+        balances[msg.sender] = msg.value + 1;
     }
 
     function getBalanceOf() public view returns (uint256){
