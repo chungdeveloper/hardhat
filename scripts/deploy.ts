@@ -17,7 +17,8 @@ async function main() {
     console.log("ContractHardHat jackson: ", jackson.address);
     const jackHardHat = HardHatContract__factory.connect(contractDeploy.address, jackson);
     await jackHardHat.addBalance({value: 1234});
-    console.log("getIOwner jackson: ", await jackHardHat.getIOwner())
+
+    console.log("getIOwner jackson: ", await jackHardHat.getOwner())
     console.log("getBalanceOf jackson: ", await jackHardHat.getBalanceOf())
 }
 

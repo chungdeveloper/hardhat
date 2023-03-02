@@ -10,7 +10,4 @@ interface IHardHatContract {
     function getNativeBalanceOf() external view returns (uint256);
 
     function getOwner() external view returns (address);
-
-    function getOwnerVl() external view returns (address);
-
 }

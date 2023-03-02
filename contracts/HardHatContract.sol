@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 
 import "../contracts/interface/IHardHatContract.sol";
 
-contract HardHatContract {
+contract HardHatContract is IHardHatContract {
 
     address private owner;
 
@@ -28,10 +28,6 @@ contract HardHatContract {
 
     function getIBalanceOf() public view returns (uint256){
         return IHardHatContract(address(this)).getBalanceOf();
-    }
-
-    function getIOwner() public view returns (address){
-        return IHardHatContract(address(this)).getOwner();
     }
 
     function getOwner() public view returns (address){
