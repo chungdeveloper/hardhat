@@ -40,6 +40,7 @@ contract HardHatContractV2 is IHardHatContract {
     function withdraw(uint256 balance) public returns (bytes memory) {
         require(balances[msg.sender] > 0 && balance <= balances[msg.sender], "Balance not invalid");
         (bool sent, bytes memory data) = payable(msg.sender).call{value : balance}("");
+        require(sent, "Transaction fail");
         balances[msg.sender] = balances[msg.sender] - balance;
         return data;
     }
