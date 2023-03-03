@@ -31,7 +31,8 @@ async function main() {
     console.log("HardHatContractV2 getBalanceOf Alex: ", await alexHardHatV2.getBalanceOf());
     console.log("HardHatContractV2 getBalanceOf Jack: ", await jackHardHatV2.getBalanceOf());
     console.log("HardHatContractV2 total balance: ", await contractDeployV2.getTotalBalance());
-    await jackHardHatV2.withdraw(2000000000);
+    const hash = await jackHardHatV2.withdraw(2000000000);
+    console.log("HardHatContractV2 withdraw Jack: ", hash);
     console.log("HardHatContractV2 getBalanceOf Jack: ", await jackHardHatV2.getBalanceOf());
     console.log("HardHatContractV2 total balance: ", await contractDeployV2.getTotalBalance());
 }
