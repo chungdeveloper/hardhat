@@ -6,10 +6,14 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract HardHatContract is IHardHatContract {
     using SafeMath for uint256;
+
+    bool private isInitialized;
     address private owner;
 
     function initialize(address) public {
+        require(!isInitialized, "Contract initialized");
         owner = msg.sender;
+        isInitialized = true;
     }
 
     mapping(address => uint256) balances;

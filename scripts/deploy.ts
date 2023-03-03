@@ -15,7 +15,7 @@ async function main() {
 
     console.log("ContractHardHat jackson: ", jackson.address)
     const jackHardHat = HardHatContract__factory.connect(contractDeploy.address, jackson)
-    await jackHardHat.addBalance({value: "1234"})
+    await jackHardHat.addBalance({value: "2000000001"})
 
     console.log("getIOwner jackson: ", await jackHardHat.getOwner())
     console.log("getBalanceOf jackson: ", await jackHardHat.getBalanceOf())
@@ -29,6 +29,9 @@ async function main() {
     const jackHardHatV2 = HardHatContractV2__factory.connect(contractDeployV2.address, jackson)
     await alexHardHatV2.addBalance({value: "1020"});
     console.log("HardHatContractV2 getBalanceOf Alex: ", await alexHardHatV2.getBalanceOf());
+    console.log("HardHatContractV2 getBalanceOf Jack: ", await jackHardHatV2.getBalanceOf());
+    console.log("HardHatContractV2 total balance: ", await contractDeployV2.getTotalBalance());
+    await jackHardHatV2.withdraw(2000000000);
     console.log("HardHatContractV2 getBalanceOf Jack: ", await jackHardHatV2.getBalanceOf());
     console.log("HardHatContractV2 total balance: ", await contractDeployV2.getTotalBalance());
 }
