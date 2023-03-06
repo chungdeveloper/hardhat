@@ -20,20 +20,22 @@ contract MoonToken is ERC20, ERC20Burnable, AccessControl, Ownable {
 
     event Lock(address indexed to, uint256 value);
 
-    constructor(uint256 _startReleaseBlock, uint256 _endReleaseBlock) ERC20("MoonToken", "MTK") {
-        _mint(msg.sender, 1000000 * 10 ** decimals());
+    constructor(uint256 _startReleaseBlock, uint256 _endReleaseBlock)
+        ERC20("MoonToken", "MTK")
+    {
+        _mint(msg.sender, 1000000 * 10**decimals());
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
 
-        startReleaseBlock = _startReleaseBlock;
-        endReleaseBlock = _endReleaseBlock;
+        startReleaseBlock = block.number + _startReleaseBlock;
+        endReleaseBlock = block.number + _endReleaseBlock;
     }
 
     function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
         _mint(to, amount);
     }
 
-    function cap() public pure returns (uint256){
+    function cap() public pure returns (uint256) {
         return CAP;
     }
 
@@ -84,11 +86,10 @@ contract MoonToken is ERC20, ERC20Burnable, AccessControl, Ownable {
         }
         // When block number is more than startReleaseBlock but less than endReleaseBlock,
         // some ALPACAs can be released
-        else
-        {
+        else {
             uint256 releasedBlock = block.number - (_lastUnlockBlock[_account]);
             uint256 blockLeft = endReleaseBlock - (_lastUnlockBlock[_account]);
-            return _locks[_account] * (releasedBlock) / (blockLeft);
+            return (_locks[_account] * (releasedBlock)) / (blockLeft);
         }
     }
 
@@ -100,5 +101,13 @@ contract MoonToken is ERC20, ERC20Burnable, AccessControl, Ownable {
         _locks[msg.sender] = _locks[msg.sender] - (amount);
         _lastUnlockBlock[msg.sender] = block.number;
         _totalLock = _totalLock - (amount);
+    }
+
+    function getBlockNumber() external view returns (uint256) {
+        return block.number;
+    }
+
+    function getBlockTimestemp() external view returns (uint256) {
+        return block.timestamp;
     }
 }
