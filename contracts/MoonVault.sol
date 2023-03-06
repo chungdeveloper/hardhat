@@ -5,5 +5,8 @@ import "../contracts/common/Initializer.sol";
 import "../contracts/common/Ownable.sol";
 
 contract MoonVault is Initializer, Ownable {
-    function initializer() public initialize {}
+
+    function initializer() public initialize {
+
+    }
 }
