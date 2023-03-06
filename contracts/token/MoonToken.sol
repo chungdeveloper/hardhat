@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "..\common\Ownable.sol";
+import "../common/Ownable.sol";
 
 contract MoonToken is ERC20, ERC20Burnable, AccessControl, Ownable {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -15,10 +15,18 @@ contract MoonToken is ERC20, ERC20Burnable, AccessControl, Ownable {
     mapping(address => uint256) private _locks;
     mapping(address => uint256) private _lastUnlockBlock;
 
-    constructor() ERC20("MoonToken", "MTK") {
+    uint256 public startReleaseBlock;
+    uint256 public endReleaseBlock;
+
+    event Lock(address indexed to, uint256 value);
+
+    constructor(uint256 _startReleaseBlock, uint256 _endReleaseBlock) ERC20("MoonToken", "MTK") {
         _mint(msg.sender, 1000000 * 10 ** decimals());
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
+
+        startReleaseBlock = _startReleaseBlock;
+        endReleaseBlock = _endReleaseBlock;
     }
 
     function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
@@ -30,7 +38,7 @@ contract MoonToken is ERC20, ERC20Burnable, AccessControl, Ownable {
     }
 
     function unlockedSupply() external view returns (uint256) {
-        return totalSupply().sub(totalLock());
+        return totalSupply() - (totalLock());
     }
 
     function totalLock() public view returns (uint256) {
@@ -38,7 +46,7 @@ contract MoonToken is ERC20, ERC20Burnable, AccessControl, Ownable {
     }
 
     function totalBalanceOf(address _account) external view returns (uint256) {
-        return _locks[_account].add(balanceOf(_account));
+        return _locks[_account] + (balanceOf(_account));
     }
 
     function lockOf(address _account) external view returns (uint256) {
@@ -55,8 +63,8 @@ contract MoonToken is ERC20, ERC20Burnable, AccessControl, Ownable {
 
         _transfer(_account, address(this), _amount);
 
-        _locks[_account] = _locks[_account].add(_amount);
-        _totalLock = _totalLock.add(_amount);
+        _locks[_account] = _locks[_account] + (_amount);
+        _totalLock = _totalLock + (_amount);
 
         if (_lastUnlockBlock[_account] < startReleaseBlock) {
             _lastUnlockBlock[_account] = startReleaseBlock;
@@ -78,9 +86,9 @@ contract MoonToken is ERC20, ERC20Burnable, AccessControl, Ownable {
         // some ALPACAs can be released
         else
         {
-            uint256 releasedBlock = block.number.sub(_lastUnlockBlock[_account]);
-            uint256 blockLeft = endReleaseBlock.sub(_lastUnlockBlock[_account]);
-            return _locks[_account].mul(releasedBlock).div(blockLeft);
+            uint256 releasedBlock = block.number - (_lastUnlockBlock[_account]);
+            uint256 blockLeft = endReleaseBlock - (_lastUnlockBlock[_account]);
+            return _locks[_account] * (releasedBlock) / (blockLeft);
         }
     }
 
@@ -89,8 +97,8 @@ contract MoonToken is ERC20, ERC20Burnable, AccessControl, Ownable {
         uint256 amount = canUnlockAmount(msg.sender);
 
         _transfer(address(this), msg.sender, amount);
-        _locks[msg.sender] = _locks[msg.sender].sub(amount);
+        _locks[msg.sender] = _locks[msg.sender] - (amount);
         _lastUnlockBlock[msg.sender] = block.number;
-        _totalLock = _totalLock.sub(amount);
+        _totalLock = _totalLock - (amount);
     }
 }
