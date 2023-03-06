@@ -4,8 +4,9 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "..\common\Ownable.sol";
 
-contract MoonToken is ERC20, ERC20Burnable, AccessControl {
+contract MoonToken is ERC20, ERC20Burnable, AccessControl, Ownable {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant EMPLOYEE_ROLE = keccak256("EMPLOYEE_ROLE");
     uint256 private constant CAP = 20000000000e18;
