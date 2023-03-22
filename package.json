@@ -18,5 +18,17 @@
   },
   "dependencies": {
     "@openzeppelin/contracts-upgradeable": "^4.8.1"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chungdeveloper/hardhat.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/chungdeveloper/hardhat/issues"
+  },
+  "homepage": "https://github.com/chungdeveloper/hardhat#readme"
 }
