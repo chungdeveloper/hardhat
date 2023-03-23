@@ -1,40 +1,111 @@
-const {ethers, upgrades} = require("hardhat");
-import {HardHatContract__factory, HardHatContractV2, HardHatContractV2__factory,} from "../typechain-types";
+import {
+    ActivePool__factory,
+    BorrowerOperations__factory,
+    CollSurplusPool__factory,
+    CommunityIssuance__factory,
+    DefaultPool__factory, LockupContractFactory__factory,
+    LQTYStaking__factory,
+    LQTYToken__factory,
+    LUSDToken__factory,
+    PriceFeed__factory,
+    SortedTroves__factory,
+    StabilityPool__factory,
+    TroveManager__factory
+} from "../typechain-types";
+
+const {ethers} = require("hardhat");
 
 async function main() {
-    const [alex, jackson, jessica, deployed] = await ethers.getSigners();
+    const [bounty, lpRewards, multisig, deployed] = await ethers.getSigners();
 
-    const HardHatContract = (await ethers.getContractFactory("HardHatContract", deployed)) as HardHatContract__factory
-    // const contractDeploy = await HardHatContract.deploy()
-    const contractDeploy = await upgrades.deployProxy(HardHatContract, [deployed.address], {initializer: 'initialize'});
-    await contractDeploy.deployed();
-    console.log("ContractHardHat deployed: ", contractDeploy.address)
+    const TroveManager = (await ethers.getContractFactory("TroveManager", deployed)) as TroveManager__factory;
+    const _troveManager = await TroveManager.deploy();
+    await _troveManager.deployed();
+    console.log("troveManager: ", _troveManager.address);
 
-    await contractDeploy.addBalance({value: "1000"})
-    console.log("getBalanceOf deployer: ", await contractDeploy.getBalanceOf())
+    const ActivePool = (await ethers.getContractFactory("ActivePool", deployed)) as ActivePool__factory;
+    const _activePool = await ActivePool.deploy();
+    await _activePool.deployed();
+    console.log("activePool: ", _activePool.address);
 
-    console.log("ContractHardHat jackson: ", jackson.address)
-    const jackHardHat = HardHatContract__factory.connect(contractDeploy.address, jackson)
-    await jackHardHat.addBalance({value: "2000000001"})
+    const DefaultPool = (await ethers.getContractFactory("DefaultPool", deployed)) as DefaultPool__factory;
+    const _defaultPool = await DefaultPool.deploy();
+    await _defaultPool.deployed();
+    console.log("defaultPool: ", _defaultPool.address);
 
-    console.log("getIOwner jackson: ", await jackHardHat.getOwner())
-    console.log("getBalanceOf jackson: ", await jackHardHat.getBalanceOf())
+    const StabilityPool = (await ethers.getContractFactory("StabilityPool", deployed)) as StabilityPool__factory;
+    const _stabilityPool = await StabilityPool.deploy();
+    await _stabilityPool.deployed();
+    console.log("_stabilityPool: ", _stabilityPool.address);
 
-    console.log("===============================Begin upgrade=================================")
+    const GasPool = (await ethers.getContractFactory("GasPool", deployed));
+    const _gasPool = await GasPool.deploy();
+    await _gasPool.deployed();
+    console.log("_gasPool: ", _gasPool.address);
 
-    const HardHatContractV2 = (await ethers.getContractFactory("HardHatContractV2", deployed)) as HardHatContractV2__factory
-    const contractDeployV2 = await upgrades.upgradeProxy(contractDeploy.address, HardHatContractV2);
-    await contractDeployV2.addBalance({value: "1000"});
-    const alexHardHatV2 = await HardHatContractV2__factory.connect(contractDeployV2.address, alex);
-    const jackHardHatV2 = HardHatContractV2__factory.connect(contractDeployV2.address, jackson)
-    await alexHardHatV2.addBalance({value: "1020"});
-    console.log("HardHatContractV2 getBalanceOf Alex: ", await alexHardHatV2.getBalanceOf());
-    console.log("HardHatContractV2 getBalanceOf Jack: ", await jackHardHatV2.getBalanceOf());
-    console.log("HardHatContractV2 total balance: ", await contractDeployV2.getTotalBalance());
-    const hash = await jackHardHatV2.withdraw(2000000000);
-    console.log("HardHatContractV2 withdraw Jack: ", hash);
-    console.log("HardHatContractV2 getBalanceOf Jack: ", await jackHardHatV2.getBalanceOf());
-    console.log("HardHatContractV2 total balance: ", await contractDeployV2.getTotalBalance());
+    const CollSurplusPool = (await ethers.getContractFactory("CollSurplusPool", deployed)) as CollSurplusPool__factory;
+    const _collSurplusPool = await CollSurplusPool.deploy();
+    await _collSurplusPool.deployed();
+    console.log("collSurplusPool: ", _collSurplusPool.address);
+
+    const PriceFeed = (await ethers.getContractFactory("PriceFeed", deployed)) as PriceFeed__factory;
+    const _priceFeed = await PriceFeed.deploy();
+    await _priceFeed.deployed();
+    console.log("priceFeed: ", _priceFeed.address);
+
+    const SortedTroves = (await ethers.getContractFactory("SortedTroves", deployed)) as SortedTroves__factory;
+    const _sortedTroves = await SortedTroves.deploy();
+    await _sortedTroves.deployed();
+    console.log("sortedTroves: ", _sortedTroves.address);
+
+    const BorrowerOperations = (await ethers.getContractFactory("BorrowerOperations", deployed)) as BorrowerOperations__factory;
+    const _borrowerOperations = await BorrowerOperations.deploy();
+    await _borrowerOperations.deployed();
+    console.log("borrowerOperations: ", _borrowerOperations.address);
+
+    const LUSDToken = (await ethers.getContractFactory("LUSDToken", deployed)) as LUSDToken__factory;
+    const _lusdToken = await LUSDToken.deploy(_troveManager.address, _stabilityPool.address, _borrowerOperations.address);
+    await _lusdToken.deployed();
+    console.log("lusdToken: ", _lusdToken.address);
+
+    const CommunityIssuance = (await ethers.getContractFactory("CommunityIssuance", deployed)) as CommunityIssuance__factory;
+    const _communityIssuance = await CommunityIssuance.deploy();
+    await _communityIssuance.deployed();
+    console.log("communityIssuance: ", _communityIssuance.address);
+
+    const LQTYStaking = (await ethers.getContractFactory("LQTYStaking", deployed)) as LQTYStaking__factory;
+    const _lqtyStaking = await LQTYStaking.deploy();
+    await _lqtyStaking.deployed();
+    console.log("lqtyStaking: ", _lqtyStaking.address);
+
+    const LockupContractFactory = (await ethers.getContractFactory("LockupContractFactory", deployed)) as LockupContractFactory__factory;
+    const _lockupContractFactory = await LockupContractFactory.deploy();
+    await _lockupContractFactory.deployed();
+    console.log("lockupContractFactory: ", _lockupContractFactory.address);
+
+    const LQTYToken = (await ethers.getContractFactory("LQTYToken", deployed)) as LQTYToken__factory;
+    const _lqtyToken = await LQTYToken.deploy(_communityIssuance.address, _lqtyStaking.address, _lockupContractFactory.address, bounty.address, lpRewards.address, multisig.address);
+    await _lqtyToken.deployed();
+    console.log("lqtyToken: ", _lqtyToken.address);
+
+    //==================================================================================================================
+
+    const troveManagerSetAddressTx = await _troveManager.setAddresses(
+        _borrowerOperations.address,
+        _activePool.address,
+        _defaultPool.address,
+        _stabilityPool.address,
+        _gasPool.address,
+        _collSurplusPool.address,
+        _priceFeed.address,
+        _lusdToken.address,
+        _sortedTroves.address,
+        _lqtyToken.address,
+        _lqtyStaking.address,
+    );
+
+    console.log("troveManagerSetAddressTx: ", troveManagerSetAddressTx.hash);
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere
