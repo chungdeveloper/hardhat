@@ -3,17 +3,21 @@ import {
     BorrowerOperations__factory,
     CollSurplusPool__factory,
     CommunityIssuance__factory,
-    DefaultPool__factory, HintHelpers__factory, LockupContractFactory__factory,
+    DefaultPool__factory, HintHelpers, HintHelpers__factory, LockupContractFactory__factory,
     LQTYStaking__factory,
-    LQTYToken__factory,
+    LQTYToken__factory, LUSDToken,
     LUSDToken__factory,
     PriceFeed__factory,
     SortedTroves__factory,
-    StabilityPool__factory,
+    StabilityPool__factory, TroveManager,
     TroveManager__factory
 } from "../typechain-types";
+import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
+import {BigNumber, BigNumberish} from "ethers";
 
 const {ethers} = require("hardhat");
+
+let currentLatestRandomSeed: BigNumber = BigNumber.from('31337');
 
 async function main() {
     const [acc0, acc1, acc2, acc3, bounty, lpRewards, multisig, deployed,] = await ethers.getSigners();
@@ -205,42 +209,54 @@ async function main() {
     console.log("Gas used: ", lastBalance - await deployed.getBalance());
 
     console.log("//==================================================================================================================");
-    console.log("//==========================================CHUNGLD=================================================================");
-    const chungldBorrowOperations = await BorrowerOperations__factory.connect(_borrowerOperations.address, acc0);
-    console.log("Chungld before debt ETH Balance: %s - USD Balance: %s", await acc0.getBalance(), await _lusdToken.balanceOf(acc0.address))
-    const tx = await chungldBorrowOperations.openTrove(
-        '50000000000000000',
-        '10000000000000000000000',
-        '0x0000000000000000000000000000000000000000',
-        '0x0000000000000000000000000000000000000000',
-        {value: '10000000000000000000'});
-    console.log("OpenTroveTX: ", tx.hash);
-    console.log("Chungld trove coll: %s; debt: %s", await _troveManager.getTroveColl(acc0.address), await _troveManager.getTroveDebt(acc0.address))
-    console.log("Chungld after debt ETH Balance: %s - USD Balance: %s", await acc0.getBalance(), await _lusdToken.balanceOf(acc0.address))
+    await createTrove(acc0, _borrowerOperations.address, _lusdToken, _troveManager, _hintHelpers, '10000000000000000000', '10000000000000000000000');
+    await createTrove(acc1, _borrowerOperations.address, _lusdToken, _troveManager, _hintHelpers, '21000000000000000000', '8000000000000000000000');
+    await createTrove(acc2, _borrowerOperations.address, _lusdToken, _troveManager, _hintHelpers, '30000000000000000000', '6000000000000000000000');
+    await createTrove(acc3, _borrowerOperations.address, _lusdToken, _troveManager, _hintHelpers, '16000000000000000000', '12000000000000000000000');
 
-    console.log("//===========================================HoaiHT==================================================================");
-
-    const hoaihtBorrowOperations = await BorrowerOperations__factory.connect(_borrowerOperations.address, acc1);
-    console.log("HoaiHT before debt ETH Balance: %s - USD Balance: %s", await acc1.getBalance(), await _lusdToken.balanceOf(acc1.address))
-    const hoaihtTroveTX = await hoaihtBorrowOperations.openTrove(
-        '50000000000000000',
-        '8000000000000000000000',
-        '0x0000000000000000000000000000000000000000',
-        '0x0000000000000000000000000000000000000000',
-        {value: '12000000000000000000'});
-    console.log("OpenTroveTX: ", hoaihtTroveTX.hash);
-    console.log("HoaiHT trove coll: %s; debt: %s", await _troveManager.getTroveColl(acc1.address), await _troveManager.getTroveDebt(acc1.address))
-    console.log("HoaiHT after debt ETH Balance: %s - USD Balance: %s", await acc1.getBalance(), await _lusdToken.balanceOf(acc1.address))
-
-    console.log("//==================================================================================================================")
-
-    console.log("TCR: %s", await _troveManager.getTCR('1819000000000000000000'))
-
-
+    console.log("TCR: %s; currentLatestRandomSeed: %s", await _troveManager.getTCR('1819000000000000000000'), currentLatestRandomSeed)
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
+async function createTrove(
+    acc: SignerWithAddress,
+    borrowContractAddress: string,
+    token: LUSDToken,
+    troveManager: TroveManager,
+    hintHelper: HintHelpers,
+    coll: BigNumberish,
+    debt: BigNumberish,
+) {
+    console.log("\n//================================================%s================================================", acc.address);
+    const borrowerOperations = await BorrowerOperations__factory.connect(borrowContractAddress, acc);
+    console.log("before debt ETH Balance: %s - USD Balance: %s", await acc.getBalance(), await token.balanceOf(acc.address))
+    const {upperHint, lowerHint} = await getBorrowerOpsListHint(hintHelper, coll, debt, acc);
+    console.log("upperHint: %s; lowerHint: %s", upperHint, lowerHint);
+    const tx = await borrowerOperations.openTrove(
+        '50000000000000000',
+        debt,
+        upperHint,
+        lowerHint,
+        {value: coll});
+    console.log("OpenTroveTX: ", tx.hash);
+    console.log("Trove coll: %s; debt: %s", await troveManager.getTroveColl(acc.address), await troveManager.getTroveDebt(acc.address))
+    console.log("After debt ETH Balance: %s - USD Balance: %s", await acc.getBalance(), await token.balanceOf(acc.address))
+}
+
+async function getBorrowerOpsListHint(hintHelpers: HintHelpers, newColl: BigNumberish, newDebt: BigNumberish, acc: SignerWithAddress) {
+    const newNICR = await hintHelpers.computeNominalCR(newColl, newDebt)
+    const {
+        hintAddress: approxfullListHint,
+        latestRandomSeed
+    } = await hintHelpers.getApproxHint(newNICR, 5, currentLatestRandomSeed)
+    currentLatestRandomSeed = latestRandomSeed;
+
+    const {
+        0: upperHint,
+        1: lowerHint,
+    } = await SortedTroves__factory.connect(await hintHelpers.sortedTroves(), acc).findInsertPosition(newNICR, approxfullListHint, approxfullListHint)
+    return {upperHint, lowerHint}
+}
+
 main().catch((error) => {
     console.error(error);
     process.exitCode = 1;
