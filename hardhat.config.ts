@@ -1,8 +1,15 @@
 import {HardhatUserConfig} from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+
 require('@openzeppelin/hardhat-upgrades');
 
-const {privateKey} = require('./secret.json');
+const {
+    deployer,
+    acc1,
+    acc2,
+    acc3,
+    acc4,
+} = require('./secret.json');
 
 const config: HardhatUserConfig = {
     defaultNetwork: 'hardhat',
@@ -18,13 +25,23 @@ const config: HardhatUserConfig = {
             url: "https://data-seed-prebsc-1-s1.binance.org:8545",
             chainId: 97,
             gasPrice: 20000000000,
-            accounts: [privateKey]
+            accounts: [deployer,
+                acc1,
+                acc2,
+                acc3,
+                acc4,
+            ]
         },
         mainnet: {
             url: "https://bsc-dataseed.binance.org/",
             chainId: 56,
             gasPrice: 20000000000,
-            accounts: [privateKey]
+            accounts: [deployer,
+                acc1,
+                acc2,
+                acc3,
+                acc4,
+            ]
         }
     },
 

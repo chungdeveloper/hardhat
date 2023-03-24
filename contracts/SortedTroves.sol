@@ -70,7 +70,7 @@ contract SortedTroves is Ownable, CheckContract, ISortedTroves {
         address tail;                        // Tail of the list. Also the node in the list with the smallest NICR
         uint256 maxSize;                     // Maximum size of the list
         uint256 size;                        // Current size of the list
-        mapping (address => Node) nodes;     // Track the corresponding ids for each node in the list
+        mapping(address => Node) nodes;     // Track the corresponding ids for each node in the list
     }
 
     Data public data;
@@ -101,7 +101,7 @@ contract SortedTroves is Ownable, CheckContract, ISortedTroves {
      * @param _nextId Id of next node for the insert position
      */
 
-    function insert (address _id, uint256 _NICR, address _prevId, address _nextId) external override {
+    function insert(address _id, uint256 _NICR, address _prevId, address _nextId) external override {
         ITroveManager troveManagerCached = troveManager;
 
         _requireCallerIsBOorTroveM(troveManagerCached);
@@ -127,7 +127,7 @@ contract SortedTroves is Ownable, CheckContract, ISortedTroves {
             (prevId, nextId) = _findInsertPosition(_troveManager, _NICR, prevId, nextId);
         }
 
-         data.nodes[_id].exists = true;
+        data.nodes[_id].exists = true;
 
         if (prevId == address(0) && nextId == address(0)) {
             // Insert as head and tail
@@ -311,8 +311,8 @@ contract SortedTroves is Ownable, CheckContract, ISortedTroves {
         } else {
             // `(_prevId, _nextId)` is a valid insert position if they are adjacent nodes and `_NICR` falls between the two nodes' NICRs
             return data.nodes[_prevId].nextId == _nextId &&
-                   _troveManager.getNominalICR(_prevId) >= _NICR &&
-                   _NICR >= _troveManager.getNominalICR(_nextId);
+            _troveManager.getNominalICR(_prevId) >= _NICR &&
+            _NICR >= _troveManager.getNominalICR(_nextId);
         }
     }
 
@@ -415,6 +415,6 @@ contract SortedTroves is Ownable, CheckContract, ISortedTroves {
 
     function _requireCallerIsBOorTroveM(ITroveManager _troveManager) internal view {
         require(msg.sender == borrowerOperationsAddress || msg.sender == address(_troveManager),
-                "SortedTroves: Caller is neither BO nor TroveM");
+            "SortedTroves: Caller is neither BO nor TroveM");
     }
 }

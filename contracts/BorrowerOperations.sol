@@ -193,6 +193,7 @@ contract BorrowerOperations is LiquityBase, Ownable, CheckContract, IBorrowerOpe
             _requireICRisAboveCCR(vars.ICR);
         } else {
             // Check ICR > MCR (MCR current is 110%) Minimum collateral ratio
+            console.log("_requireICRisAboveMCR: ", vars.ICR);
             _requireICRisAboveMCR(vars.ICR);
             // uint _collChange, bool _isCollIncrease, uint _debtChange, bool _isDebtIncrease, uint _price
             // Calc new total collateral ratio
