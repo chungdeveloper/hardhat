@@ -44,6 +44,9 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
     // Maximum deviation allowed between two consecutive Chainlink oracle prices. 18-digit precision.
     uint constant public MAX_PRICE_DEVIATION_FROM_PREVIOUS_ROUND = 5e17; // 50%
 
+    //todo CHUNGLD this is bop dai
+    uint private _price;
+
     /* 
     * The maximum relative price difference between two oracle responses allowed in order for the PriceFeed
     * to return to using the Chainlink oracle. 18-digit precision.
@@ -332,7 +335,12 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
         //            return _storeChainlinkPrice(chainlinkResponse);
         //        }
         // todo use oracle get price
-        return 1819e18;
+        return _price;
+    }
+
+    // todo CHUNGLD: Không xóa là bốc cớt đấy
+    function updatePrice(uint price) public {
+        _price = price;
     }
 
     // --- Helper functions ---

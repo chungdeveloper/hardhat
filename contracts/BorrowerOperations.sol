@@ -154,6 +154,7 @@ contract BorrowerOperations is LiquityBase, Ownable, CheckContract, IBorrowerOpe
     // --- Borrower Trove Operations ---
 
     function openTrove(uint _maxFeePercentage, uint _LUSDAmount, address _upperHint, address _lowerHint) external payable override {
+        console.log("Call from %s", msg.sender);
         ContractsCache memory contractsCache = ContractsCache(troveManager, activePool, lusdToken);
         LocalVariables_openTrove memory vars;
         // fetch price by oracle
@@ -482,6 +483,7 @@ contract BorrowerOperations is LiquityBase, Ownable, CheckContract, IBorrowerOpe
     // Issue the specified amount of LUSD to _account and increases the total active debt (_netDebtIncrease potentially includes a LUSDFee)
     function _withdrawLUSD(IActivePool _activePool, ILUSDToken _lusdToken, address _account, uint _LUSDAmount, uint _netDebtIncrease) internal {
         _activePool.increaseLUSDDebt(_netDebtIncrease);
+        console.log("Mint %s %s: %s", address(_lusdToken), _account, _LUSDAmount);
         _lusdToken.mint(_account, _LUSDAmount);
     }
 

@@ -1,15 +1,23 @@
 import {
     ActivePool__factory,
     BorrowerOperations__factory,
+    BorrowerOperationsScript,
+    BorrowerOperationsScript__factory,
+    BorrowerWrappersScript__factory,
     CollSurplusPool__factory,
     CommunityIssuance__factory,
-    DefaultPool__factory, HintHelpers, HintHelpers__factory, LockupContractFactory__factory,
+    DefaultPool__factory,
+    HintHelpers,
+    HintHelpers__factory,
+    LockupContractFactory__factory,
     LQTYStaking__factory,
-    LQTYToken__factory, LUSDToken,
+    LQTYToken__factory,
+    LUSDToken,
     LUSDToken__factory,
     PriceFeed__factory,
     SortedTroves__factory,
-    StabilityPool__factory, TroveManager,
+    StabilityPool__factory,
+    TroveManager,
     TroveManager__factory
 } from "../typechain-types";
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
@@ -23,13 +31,18 @@ async function main() {
     const [acc0, acc1, acc2, acc3, bounty, lpRewards, multisig, deployed,] = await ethers.getSigners();
     const lastBalance = await deployed.getBalance();
 
+    console.log("//==================================================================================================================")
+
     console.log("deployed: %s", deployed.address);
     console.log("bounty: %s", bounty.address);
     console.log("lpRewards: %s", lpRewards.address);
     console.log("multisig: %s", multisig.address);
-    console.log("chungld: %s", acc0.address);
-    console.log("hoaiht: %s", acc1.address);
+    console.log("acc0: %s", acc0.address);
+    console.log("acc1: %s", acc1.address);
+    console.log("acc2: %s", acc2.address);
+    console.log("acc3: %s", acc3.address);
 
+    console.log("//==================================================================================================================")
 
     const TroveManager = (await ethers.getContractFactory("TroveManager", deployed)) as TroveManager__factory;
     const _troveManager = await TroveManager.deploy();
@@ -107,6 +120,15 @@ async function main() {
     console.log("lqtyToken: ", _lqtyToken.address);
 
     console.log("//==================================================================================================================")
+
+    const lqtyStakingTx = await _lqtyStaking.setAddresses(
+        _lqtyToken.address,
+        _lusdToken.address,
+        _troveManager.address,
+        _borrowerOperations.address,
+        _activePool.address,
+    );
+    console.log("lqtyStakingTx: ", lqtyStakingTx.hash)
 
     const troveManagerSetAddressTx = await _troveManager.setAddresses(
         _borrowerOperations.address,
@@ -194,25 +216,20 @@ async function main() {
     );
     console.log("hintHelpersTx: ", hintHelpersTx.hash)
 
-    const lqtyStakingTx = await _lqtyStaking.setAddresses(
-        _lqtyToken.address,
-        _lusdToken.address,
-        _troveManager.address,
-        _borrowerOperations.address,
-        _activePool.address,
-    );
-    console.log("lqtyStakingTx: ", lqtyStakingTx.hash)
-
     const lockupContractFactoryTx = await _lockupContractFactory.setLQTYTokenAddress(_lqtyToken.address);
 
     console.log("lockupContractFactoryTx: ", lockupContractFactoryTx.hash)
     console.log("Gas used: ", lastBalance - await deployed.getBalance());
 
+    const priceFeedTx = await _priceFeed.updatePrice('1808225102000000000000');
+    console.log('priceFeedTx: ', priceFeedTx.hash);
+
     console.log("//==================================================================================================================");
-    await createTrove(acc0, _borrowerOperations.address, _lusdToken, _troveManager, _hintHelpers, '10000000000000000000', '10000000000000000000000');
-    await createTrove(acc1, _borrowerOperations.address, _lusdToken, _troveManager, _hintHelpers, '21000000000000000000', '8000000000000000000000');
+
     await createTrove(acc2, _borrowerOperations.address, _lusdToken, _troveManager, _hintHelpers, '30000000000000000000', '6000000000000000000000');
     await createTrove(acc3, _borrowerOperations.address, _lusdToken, _troveManager, _hintHelpers, '16000000000000000000', '12000000000000000000000');
+    await createTrove(acc0, _borrowerOperations.address, _lusdToken, _troveManager, _hintHelpers, '10000000000000000000', '15000000000000000000000');
+    await createTrove(acc1, _borrowerOperations.address, _lusdToken, _troveManager, _hintHelpers, '10000000000000000000', '15000000000000000000000');
 
     console.log("TCR: %s; currentLatestRandomSeed: %s", await _troveManager.getTCR('1819000000000000000000'), currentLatestRandomSeed)
 }

@@ -35,3 +35,9 @@ npx hardhat run scripts/deploy.ts --network testnet
 run task
 npx hardhat taskName
 ```
+# Sync project with remix
+```shell
+remixd -s "C:\\Critic\\project\\Contract\\hardhat2" --remix-ide https://remix.ethereum.org
+
+npx hardhat node
+```
