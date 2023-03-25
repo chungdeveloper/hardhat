@@ -339,7 +339,7 @@ contract PriceFeed is Ownable, CheckContract, BaseMath, IPriceFeed {
     }
 
     // todo: Không xóa là bốc cớt đấy
-    function updatePrice(uint price) public {
+    function updatePrice(uint price) external onlyOwner {
         _price = price;
     }
 

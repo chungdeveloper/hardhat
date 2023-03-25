@@ -222,7 +222,7 @@ async function main() {
     console.log("Gas used: ", lastBalance - await deployed.getBalance());
 
     const priceFeedTx = await _priceFeed.updatePrice('1808225102000000000000');
-    console.log('priceFeedTx: ', priceFeedTx.hash);
+    console.log('priceFeedTx: %s', priceFeedTx.hash);
 
     console.log("//==================================================================================================================");
 
