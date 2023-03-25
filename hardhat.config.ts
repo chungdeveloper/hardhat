@@ -9,6 +9,9 @@ const {
     acc2,
     acc3,
     acc4,
+    acc5,
+    acc6,
+    acc7,
 } = require('./secret.json');
 
 const config: HardhatUserConfig = {
@@ -21,29 +24,37 @@ const config: HardhatUserConfig = {
         quorum: {
             url: 'http://127.0.0.1:22000'
         },
-        moonnet:{
+        moonnet: {
             url: 'http://192.168.11.140:8545'
         },
         testnet: {
             url: "https://data-seed-prebsc-1-s1.binance.org:8545",
             chainId: 97,
             gasPrice: 20000000000,
-            accounts: [deployer,
+            accounts: [
+                deployer,
                 acc1,
                 acc2,
                 acc3,
                 acc4,
+                acc5,
+                acc6,
+                acc7,
             ]
         },
         mainnet: {
             url: "https://bsc-dataseed.binance.org/",
             chainId: 56,
             gasPrice: 20000000000,
-            accounts: [deployer,
+            accounts: [
+                deployer,
                 acc1,
                 acc2,
                 acc3,
                 acc4,
+                acc5,
+                acc6,
+                acc7,
             ]
         }
     },

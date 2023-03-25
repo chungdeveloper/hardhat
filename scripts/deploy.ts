@@ -1,9 +1,6 @@
 import {
     ActivePool__factory,
     BorrowerOperations__factory,
-    BorrowerOperationsScript,
-    BorrowerOperationsScript__factory,
-    BorrowerWrappersScript__factory,
     CollSurplusPool__factory,
     CommunityIssuance__factory,
     DefaultPool__factory,
@@ -28,7 +25,7 @@ const {ethers} = require("hardhat");
 let currentLatestRandomSeed: BigNumber = BigNumber.from('31337');
 
 async function main() {
-    const [acc0, acc1, acc2, acc3, bounty, lpRewards, multisig, deployed,] = await ethers.getSigners();
+    const [deployed, acc0, acc1, acc2, acc3, bounty, lpRewards, multisig,] = await ethers.getSigners();
     const lastBalance = await deployed.getBalance();
 
     console.log("//==================================================================================================================")
