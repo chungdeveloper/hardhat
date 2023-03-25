@@ -21,6 +21,9 @@ const config: HardhatUserConfig = {
         quorum: {
             url: 'http://127.0.0.1:22000'
         },
+        moonnet:{
+            url: 'http://192.168.11.140:8545'
+        },
         testnet: {
             url: "https://data-seed-prebsc-1-s1.binance.org:8545",
             chainId: 97,
