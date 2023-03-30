@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.11;
+pragma solidity 0.8.11;
 
 import "./Interfaces/ITroveManager.sol";
 import "./Interfaces/ISortedTroves.sol";
@@ -9,6 +9,7 @@ import "./Dependencies/Ownable.sol";
 import "./Dependencies/CheckContract.sol";
 
 contract HintHelpers is LiquityBase, Ownable, CheckContract {
+    using SafeMath for uint256;
     string constant public NAME = "HintHelpers";
 
     ISortedTroves public sortedTroves;
@@ -25,8 +26,8 @@ contract HintHelpers is LiquityBase, Ownable, CheckContract {
         address _sortedTrovesAddress,
         address _troveManagerAddress
     )
-        external
-        onlyOwner
+    external
+    onlyOwner
     {
         checkContract(_sortedTrovesAddress);
         checkContract(_troveManagerAddress);
@@ -60,17 +61,17 @@ contract HintHelpers is LiquityBase, Ownable, CheckContract {
      */
 
     function getRedemptionHints(
-        uint _LUSDamount, 
+        uint _LUSDamount,
         uint _price,
         uint _maxIterations
     )
-        external
-        view
-        returns (
-            address firstRedemptionHint,
-            uint partialRedemptionHintNICR,
-            uint truncatedLUSDamount
-        )
+    external
+    view
+    returns (
+        address firstRedemptionHint,
+        uint partialRedemptionHintNICR,
+        uint truncatedLUSDamount
+    )
     {
         ISortedTroves sortedTrovesCached = sortedTroves;
 
@@ -84,19 +85,18 @@ contract HintHelpers is LiquityBase, Ownable, CheckContract {
         firstRedemptionHint = currentTroveuser;
 
         if (_maxIterations == 0) {
-            _maxIterations = uint(-1);
+            _maxIterations = MAX_INT;
         }
 
         while (currentTroveuser != address(0) && remainingLUSD > 0 && _maxIterations-- > 0) {
-            uint netLUSDDebt = _getNetDebt(troveManager.getTroveDebt(currentTroveuser))
-                .add(troveManager.getPendingLUSDDebtReward(currentTroveuser));
+            uint netLUSDDebt = _getNetDebt(troveManager.getTroveDebt(currentTroveuser)).add(troveManager.getPendingLUSDDebtReward(currentTroveuser));
 
             if (netLUSDDebt > remainingLUSD) {
                 if (netLUSDDebt > MIN_NET_DEBT) {
                     uint maxRedeemableLUSD = LiquityMath._min(remainingLUSD, netLUSDDebt.sub(MIN_NET_DEBT));
 
                     uint ETH = troveManager.getTroveColl(currentTroveuser)
-                        .add(troveManager.getPendingETHReward(currentTroveuser));
+                    .add(troveManager.getPendingETHReward(currentTroveuser));
 
                     uint newColl = ETH.sub(maxRedeemableLUSD.mul(DECIMAL_PRECISION).div(_price));
                     uint newDebt = netLUSDDebt.sub(maxRedeemableLUSD);
@@ -127,9 +127,9 @@ contract HintHelpers is LiquityBase, Ownable, CheckContract {
     be <= sqrt(length) positions away from the correct insert position.
     */
     function getApproxHint(uint _CR, uint _numTrials, uint _inputRandomSeed)
-        external
-        view
-        returns (address hintAddress, uint diff, uint latestRandomSeed)
+    external
+    view
+    returns (address hintAddress, uint diff, uint latestRandomSeed)
     {
         uint arrayLength = troveManager.getTroveOwnersCount();
 

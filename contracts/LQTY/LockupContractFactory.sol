@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.11;
+pragma solidity 0.8.11;
 
 import "../Dependencies/CheckContract.sol";
 import "../Dependencies/SafeMath.sol";
@@ -32,13 +32,8 @@ contract LockupContractFactory is ILockupContractFactory, Ownable, CheckContract
     uint constant public SECONDS_IN_ONE_YEAR = 31536000;
 
     address public lqtyTokenAddress;
-    
-    mapping (address => address) public lockupContractToDeployer;
 
-    // --- Events ---
-
-    event LQTYTokenAddressSet(address _lqtyTokenAddress);
-    event LockupContractDeployedThroughFactory(address _lockupContractAddress, address _beneficiary, uint _unlockTime, address _deployer);
+    mapping(address => address) public lockupContractToDeployer;
 
     // --- Functions ---
 
@@ -55,9 +50,9 @@ contract LockupContractFactory is ILockupContractFactory, Ownable, CheckContract
         address lqtyTokenAddressCached = lqtyTokenAddress;
         _requireLQTYAddressIsSet(lqtyTokenAddressCached);
         LockupContract lockupContract = new LockupContract(
-                                                        lqtyTokenAddressCached,
-                                                        _beneficiary, 
-                                                        _unlockTime);
+            lqtyTokenAddressCached,
+            _beneficiary,
+            _unlockTime);
 
         lockupContractToDeployer[address(lockupContract)] = msg.sender;
         emit LockupContractDeployedThroughFactory(address(lockupContract), _beneficiary, _unlockTime, msg.sender);

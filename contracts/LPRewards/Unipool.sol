@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.11;
+pragma solidity 0.8.11;
 
 import "../Dependencies/LiquityMath.sol";
 import "../Dependencies/SafeMath.sol";
@@ -72,6 +72,7 @@ contract LPTokenWrapper is ILPTokenWrapper {
  * or first liquidity provider stakes UNIv2 LP tokens into it.
  */
 contract Unipool is LPTokenWrapper, Ownable, CheckContract, IUnipool {
+    using SafeMath for uint256;
     string constant public NAME = "Unipool";
 
     uint256 public duration;
@@ -97,9 +98,9 @@ contract Unipool is LPTokenWrapper, Ownable, CheckContract, IUnipool {
         address _uniTokenAddress,
         uint _duration
     )
-        external
-        override
-        onlyOwner
+    external
+    override
+    onlyOwner
     {
         checkContract(_lqtyTokenAddress);
         checkContract(_uniTokenAddress);
@@ -127,22 +128,22 @@ contract Unipool is LPTokenWrapper, Ownable, CheckContract, IUnipool {
             return rewardPerTokenStored;
         }
         return
-            rewardPerTokenStored.add(
-                lastTimeRewardApplicable()
-                    .sub(lastUpdateTime)
-                    .mul(rewardRate)
-                    .mul(1e18)
-                    .div(totalSupply())
-            );
+        rewardPerTokenStored.add(
+            lastTimeRewardApplicable()
+            .sub(lastUpdateTime)
+            .mul(rewardRate)
+            .mul(1e18)
+            .div(totalSupply())
+        );
     }
 
     // Returns the amount that an account can claim
     function earned(address account) public view override returns (uint256) {
         return
-            balanceOf(account)
-                .mul(rewardPerToken().sub(userRewardPerTokenPaid[account]))
-                .div(1e18)
-                .add(rewards[account]);
+        balanceOf(account)
+        .mul(rewardPerToken().sub(userRewardPerTokenPaid[account]))
+        .div(1e18)
+        .add(rewards[account]);
     }
 
     // stake visibility is public as overriding LPTokenWrapper's stake() function

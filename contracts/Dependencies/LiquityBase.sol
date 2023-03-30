@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.11;
+pragma solidity 0.8.11;
 
 import "./BaseMath.sol";
 import "./LiquityMath.sol";
@@ -40,6 +40,8 @@ contract LiquityBase is BaseMath, ILiquityBase {
     IDefaultPool public defaultPool;
 
     IPriceFeed public override priceFeed;
+
+    uint256 MAX_INT = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
 
     // --- Gas compensation functions ---
 

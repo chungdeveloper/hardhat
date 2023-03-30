@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.11;
+pragma solidity 0.8.11;
 
 import "../Dependencies/CheckContract.sol";
 import "../Dependencies/SafeMath.sol";
@@ -57,8 +57,8 @@ contract LQTYToken is CheckContract, ILQTYToken {
     string constant internal _VERSION = "1";
     uint8 constant internal  _DECIMALS = 18;
 
-    mapping (address => uint256) private _balances;
-    mapping (address => mapping (address => uint256)) private _allowances;
+    mapping(address => uint256) private _balances;
+    mapping(address => mapping(address => uint256)) private _allowances;
     uint private _totalSupply;
 
     // --- EIP 2612 Data ---
@@ -75,8 +75,8 @@ contract LQTYToken is CheckContract, ILQTYToken {
 
     bytes32 private immutable _HASHED_NAME;
     bytes32 private immutable _HASHED_VERSION;
-    
-    mapping (address => uint256) private _nonces;
+
+    mapping(address => uint256) private _nonces;
 
     // --- LQTYToken specific data ---
 
@@ -95,32 +95,26 @@ contract LQTYToken is CheckContract, ILQTYToken {
 
     ILockupContractFactory public immutable lockupContractFactory;
 
-    // --- Events ---
-
-    event CommunityIssuanceAddressSet(address _communityIssuanceAddress);
-    event LQTYStakingAddressSet(address _lqtyStakingAddress);
-    event LockupContractFactoryAddressSet(address _lockupContractFactoryAddress);
-
     // --- Functions ---
 
     constructor
     (
-        address _communityIssuanceAddress, 
+        address _communityIssuanceAddress,
         address _lqtyStakingAddress,
         address _lockupFactoryAddress,
         address _bountyAddress,
         address _lpRewardsAddress,
         address _multisigAddress
-    ) 
-        public 
+    )
+    public
     {
         checkContract(_communityIssuanceAddress);
         checkContract(_lqtyStakingAddress);
         checkContract(_lockupFactoryAddress);
 
         multisigAddress = _multisigAddress;
-        deploymentStartTime  = block.timestamp;
-        
+        deploymentStartTime = block.timestamp;
+
         communityIssuanceAddress = _communityIssuanceAddress;
         lqtyStakingAddress = _lqtyStakingAddress;
         lockupContractFactory = ILockupContractFactory(_lockupFactoryAddress);
@@ -132,24 +126,27 @@ contract LQTYToken is CheckContract, ILQTYToken {
         _HASHED_VERSION = hashedVersion;
         _CACHED_CHAIN_ID = _chainID();
         _CACHED_DOMAIN_SEPARATOR = _buildDomainSeparator(_TYPE_HASH, hashedName, hashedVersion);
-        
+
         // --- Initial LQTY allocations ---
-     
-        uint bountyEntitlement = _1_MILLION.mul(2); // Allocate 2 million for bounties/hackathons
+
+        uint bountyEntitlement = _1_MILLION.mul(2);
+        // Allocate 2 million for bounties/hackathons
         _mint(_bountyAddress, bountyEntitlement);
 
-        uint depositorsAndFrontEndsEntitlement = _1_MILLION.mul(32); // Allocate 32 million to the algorithmic issuance schedule
+        uint depositorsAndFrontEndsEntitlement = _1_MILLION.mul(32);
+        // Allocate 32 million to the algorithmic issuance schedule
         _mint(_communityIssuanceAddress, depositorsAndFrontEndsEntitlement);
 
-        uint _lpRewardsEntitlement = _1_MILLION.mul(4).div(3);  // Allocate 1.33 million for LP rewards
+        uint _lpRewardsEntitlement = _1_MILLION.mul(4).div(3);
+        // Allocate 1.33 million for LP rewards
         lpRewardsEntitlement = _lpRewardsEntitlement;
         _mint(_lpRewardsAddress, _lpRewardsEntitlement);
-        
+
         // Allocate the remainder to the LQTY Multisig: (100 - 2 - 32 - 1.33) million = 64.66 million
         uint multisigEntitlement = _1_MILLION.mul(100)
-            .sub(bountyEntitlement)
-            .sub(depositorsAndFrontEndsEntitlement)
-            .sub(_lpRewardsEntitlement);
+        .sub(bountyEntitlement)
+        .sub(depositorsAndFrontEndsEntitlement)
+        .sub(_lpRewardsEntitlement);
 
         _mint(_multisigAddress, multisigEntitlement);
     }
@@ -190,15 +187,15 @@ contract LQTYToken is CheckContract, ILQTYToken {
     }
 
     function approve(address spender, uint256 amount) external override returns (bool) {
-        if (_isFirstYear()) { _requireCallerIsNotMultisig(); }
+        if (_isFirstYear()) {_requireCallerIsNotMultisig();}
 
         _approve(msg.sender, spender, amount);
         return true;
     }
 
     function transferFrom(address sender, address recipient, uint256 amount) external override returns (bool) {
-        if (_isFirstYear()) { _requireSenderIsNotMultisig(sender); }
-        
+        if (_isFirstYear()) {_requireSenderIsNotMultisig(sender);}
+
         _requireValidRecipient(recipient);
 
         _transfer(sender, recipient, amount);
@@ -207,28 +204,29 @@ contract LQTYToken is CheckContract, ILQTYToken {
     }
 
     function increaseAllowance(address spender, uint256 addedValue) external override returns (bool) {
-        if (_isFirstYear()) { _requireCallerIsNotMultisig(); }
-        
+        if (_isFirstYear()) {_requireCallerIsNotMultisig();}
+
         _approve(msg.sender, spender, _allowances[msg.sender][spender].add(addedValue));
         return true;
     }
 
     function decreaseAllowance(address spender, uint256 subtractedValue) external override returns (bool) {
-        if (_isFirstYear()) { _requireCallerIsNotMultisig(); }
-        
+        if (_isFirstYear()) {_requireCallerIsNotMultisig();}
+
         _approve(msg.sender, spender, _allowances[msg.sender][spender].sub(subtractedValue, "ERC20: decreased allowance below zero"));
         return true;
     }
 
     function sendToLQTYStaking(address _sender, uint256 _amount) external override {
         _requireCallerIsLQTYStaking();
-        if (_isFirstYear()) { _requireSenderIsNotMultisig(_sender); }  // Prevent the multisig from staking LQTY
+        if (_isFirstYear()) {_requireSenderIsNotMultisig(_sender);}
+        // Prevent the multisig from staking LQTY
         _transfer(_sender, lqtyStakingAddress, _amount);
     }
 
     // --- EIP 2612 functionality ---
 
-    function domainSeparator() public view override returns (bytes32) {    
+    function domainSeparator() public view override returns (bytes32) {
         if (_chainID() == _CACHED_CHAIN_ID) {
             return _CACHED_DOMAIN_SEPARATOR;
         } else {
@@ -238,34 +236,34 @@ contract LQTYToken is CheckContract, ILQTYToken {
 
     function permit
     (
-        address owner, 
-        address spender, 
-        uint amount, 
-        uint deadline, 
-        uint8 v, 
-        bytes32 r, 
+        address owner,
+        address spender,
+        uint amount,
+        uint deadline,
+        uint8 v,
+        bytes32 r,
         bytes32 s
-    ) 
-        external 
-        override 
-    {            
-        require(deadline >= now, 'LQTY: expired deadline');
-        bytes32 digest = keccak256(abi.encodePacked('\x19\x01', 
-                         domainSeparator(), keccak256(abi.encode(
-                         _PERMIT_TYPEHASH, owner, spender, amount, 
-                         _nonces[owner]++, deadline))));
+    )
+    external
+    override
+    {
+        require(deadline >= block.timestamp, 'LQTY: expired deadline');
+        bytes32 digest = keccak256(abi.encodePacked('\x19\x01',
+            domainSeparator(), keccak256(abi.encode(
+                _PERMIT_TYPEHASH, owner, spender, amount,
+                _nonces[owner]++, deadline))));
         address recoveredAddress = ecrecover(digest, v, r, s);
         require(recoveredAddress == owner, 'LQTY: invalid signature');
         _approve(owner, spender, amount);
     }
 
-    function nonces(address owner) external view override returns (uint256) { // FOR EIP 2612
+    function nonces(address owner) external view override returns (uint256) {// FOR EIP 2612
         return _nonces[owner];
     }
 
     // --- Internal operations ---
 
-    function _chainID() private pure returns (uint256 chainID) {
+    function _chainID() private view returns (uint256 chainID) {
         assembly {
             chainID := chainid()
         }
@@ -299,7 +297,7 @@ contract LQTYToken is CheckContract, ILQTYToken {
         _allowances[owner][spender] = amount;
         emit Approval(owner, spender, amount);
     }
-    
+
     // --- Helper functions ---
 
     function _callerIsMultisig() internal view returns (bool) {
@@ -311,10 +309,10 @@ contract LQTYToken is CheckContract, ILQTYToken {
     }
 
     // --- 'require' functions ---
-    
+
     function _requireValidRecipient(address _recipient) internal view {
         require(
-            _recipient != address(0) && 
+            _recipient != address(0) &&
             _recipient != address(this),
             "LQTY: Cannot transfer tokens directly to the LQTY token contract or the zero address"
         );
@@ -326,8 +324,8 @@ contract LQTYToken is CheckContract, ILQTYToken {
     }
 
     function _requireRecipientIsRegisteredLC(address _recipient) internal view {
-        require(lockupContractFactory.isRegisteredLockup(_recipient), 
-        "LQTYToken: recipient must be a LockupContract registered in the Factory");
+        require(lockupContractFactory.isRegisteredLockup(_recipient),
+            "LQTYToken: recipient must be a LockupContract registered in the Factory");
     }
 
     function _requireSenderIsNotMultisig(address _sender) internal view {
@@ -339,7 +337,7 @@ contract LQTYToken is CheckContract, ILQTYToken {
     }
 
     function _requireCallerIsLQTYStaking() internal view {
-         require(msg.sender == lqtyStakingAddress, "LQTYToken: caller must be the LQTYStaking contract");
+        require(msg.sender == lqtyStakingAddress, "LQTYToken: caller must be the LQTYStaking contract");
     }
 
     // --- Optional functions ---

@@ -30,7 +30,7 @@ npx hardhat
 ```
 # Run project
 ```shell
-npx hardhat run scripts/deploy.ts --network testnet
+npx hardhat run scripts/deploy-ethereum.ts --network testnet
 
 run task
 npx hardhat taskName
