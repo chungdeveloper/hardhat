@@ -2765,6 +2765,543 @@
       "artifacts": [
         "WETH9"
       ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\interfaces\\IERC20.sol": {
+      "lastModificationDate": 1680232228246,
+      "contentHash": "35c17086669dff4f82c6f78e4a57dcea",
+      "sourceName": "contracts/uniswap/interfaces/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "IERC20"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\UniswapV2Pair.sol": {
+      "lastModificationDate": 1680233199201,
+      "contentHash": "b4d4d00eb5b81854f70970e6a24a6e24",
+      "sourceName": "contracts/uniswap/UniswapV2Pair.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [
+        "./interfaces/IUniswapV2Pair.sol",
+        "./UniswapV2ERC20.sol",
+        "./libraries/Math.sol",
+        "./libraries/UQ112x112.sol",
+        "./interfaces/IERC20.sol",
+        "./interfaces/IUniswapV2Factory.sol",
+        "./interfaces/IUniswapV2Callee.sol"
+      ],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "UniswapV2Pair"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\interfaces\\IUniswapV2Pair.sol": {
+      "lastModificationDate": 1680233474670,
+      "contentHash": "a42eb123e1102d6e6acdf4a7c313b7f4",
+      "sourceName": "contracts/uniswap/interfaces/IUniswapV2Pair.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "IUniswapV2Pair"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\libraries\\UQ112x112.sol": {
+      "lastModificationDate": 1680232193872,
+      "contentHash": "2cfcf49733d32af3605fcbae6f2ca2b9",
+      "sourceName": "contracts/uniswap/libraries/UQ112x112.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "UQ112x112"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\libraries\\Math.sol": {
+      "lastModificationDate": 1680232193868,
+      "contentHash": "b7dc1eb7d2d8809b2e9ae4220419292f",
+      "sourceName": "contracts/uniswap/libraries/Math.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "Math"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\interfaces\\IUniswapV2Factory.sol": {
+      "lastModificationDate": 1680232228260,
+      "contentHash": "558c169a381210e1da631540cba96164",
+      "sourceName": "contracts/uniswap/interfaces/IUniswapV2Factory.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "IUniswapV2Factory"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\interfaces\\IUniswapV2Callee.sol": {
+      "lastModificationDate": 1680232228251,
+      "contentHash": "6dd85a776220ae690cd4beb0f5b50596",
+      "sourceName": "contracts/uniswap/interfaces/IUniswapV2Callee.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "IUniswapV2Callee"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\UniswapV2ERC20.sol": {
+      "lastModificationDate": 1680232973326,
+      "contentHash": "359aee353c63f61a03241d79b6ddb95f",
+      "sourceName": "contracts/uniswap/UniswapV2ERC20.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [
+        "./interfaces/IUniswapV2ERC20.sol",
+        "./libraries/SafeMath.sol"
+      ],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "UniswapV2ERC20"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\interfaces\\IUniswapV2ERC20.sol": {
+      "lastModificationDate": 1680232228241,
+      "contentHash": "64ba99346b483fecdaf66516555d7943",
+      "sourceName": "contracts/uniswap/interfaces/IUniswapV2ERC20.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "IUniswapV2ERC20"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\libraries\\SafeMath.sol": {
+      "lastModificationDate": 1680232193862,
+      "contentHash": "dc92d094c5e6d09dfeb4b4b1c4d131a8",
+      "sourceName": "contracts/uniswap/libraries/SafeMath.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "SafeMath"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\test\\ERC20.sol": {
+      "lastModificationDate": 1680232193877,
+      "contentHash": "72cb12dea9d295955600451d8a945b40",
+      "sourceName": "contracts/uniswap/test/ERC20.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [
+        "../UniswapV2ERC20.sol"
+      ],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "ERC20"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\UniswapV2Factory.sol": {
+      "lastModificationDate": 1680238505067,
+      "contentHash": "09f6c06701528dcde21c7b1123a6f32f",
+      "sourceName": "contracts/uniswap/UniswapV2Factory.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [
+        "./interfaces/IUniswapV2Factory.sol",
+        "./UniswapV2Pair.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "UniswapV2Factory"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\node_modules\\hardhat\\console.sol": {
+      "lastModificationDate": 1680167628704,
+      "contentHash": "4ff3cd2f6272c9a6516e9ee4f2b967d3",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">= 0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
     }
   }
 }

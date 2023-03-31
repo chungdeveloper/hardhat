@@ -1,27 +1,13 @@
 import {Wallet} from "zksync-web3";
+// import * as ethers from "ethers";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import {Deployer} from "@matterlabs/hardhat-zksync-deploy";
-import {
-    ActivePool__factory,
-    BorrowerOperations__factory,
-    CollSurplusPool__factory,
-    CommunityIssuance__factory,
-    DefaultPool__factory,
-    HintHelpers__factory, LockupContractFactory__factory,
-    LQTYStaking__factory, LQTYToken__factory, MultiTroveGetter__factory,
-    PriceFeed__factory,
-    RUSDToken__factory,
-    SortedTroves__factory,
-    StabilityPool__factory, StakeToken__factory,
-    TroveManager__factory, Unipool__factory
-} from "../typechain-types";
 
 const {
     deploy,
     acc1,
     acc2,
-    acc3,
-    acc4,
+    acc5,
 } = require('../secret.json');
 
 export default async function (hre: HardhatRuntimeEnvironment) {
@@ -29,21 +15,30 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const wallet = new Wallet(deploy.toString());
     const bounty = new Wallet(acc1.toString());
     const multisig = new Wallet(acc2.toString());
-
-    const initStakeToken = new Wallet(acc3.toString());
-    const minterStakeToken = new Wallet(acc4.toString());
+    const feeToFactory = new Wallet(acc5.toString());
 
     const deployer = new Deployer(hre, wallet);
 
-    const troveManager = await deployer.loadArtifact("TroveManager");
-    const _troveManager = await deployer.deploy(troveManager);
-    // const _troveManager = TroveManager__factory.connect('0x73Fd84F354BFb6d21387f75803109298E93899cF', wallet);
-    console.log("TroveManager: ", _troveManager.address);
+    const weth9 = await deployer.loadArtifact("WETH9");
+    const _weth9 = await deployer.deploy(weth9);
+    const weth9Receipt = await _weth9.deployTransaction.wait();
+    console.log("WETH9 Address: ", _weth9.address);
+    console.log("WETH9 blockNumber: ", weth9Receipt.blockNumber);
+
+    const UniswapV2Factory = await deployer.loadArtifact("UniswapV2Factory");
+    const _uniswapV2Factory = await deployer.deploy(UniswapV2Factory, [wallet.address]);
+    // const _uniswapV2Factory = UniswapV2Factory__factory.connect('0x3fa03b7a4CCE720967a30889c8Fc0038A1580067', wallet);
+    console.log("UniswapV2Factory: ", _uniswapV2Factory.address);
 
     const ActivePool = await deployer.loadArtifact("ActivePool");
     const _activePool = await deployer.deploy(ActivePool);
     // const _activePool = ActivePool__factory.connect('0x3fa03b7a4CCE720967a30889c8Fc0038A1580067', wallet);
     console.log("ActivePool: ", _activePool.address);
+
+    const troveManager = await deployer.loadArtifact("TroveManager");
+    const _troveManager = await deployer.deploy(troveManager);
+    // const _troveManager = TroveManager__factory.connect('0x73Fd84F354BFb6d21387f75803109298E93899cF', wallet);
+    console.log("TroveManager: ", _troveManager.address);
 
     const DefaultPool = await deployer.loadArtifact("DefaultPool");
     const _defaultPool = await deployer.deploy(DefaultPool);
@@ -110,7 +105,6 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     // const _lockupContractFactory = LockupContractFactory__factory.connect("0xbBD29e0229F1f15913C74F6fEC12A9Ea0520eD8B", wallet);
     console.log("LockupContractFactory: ", _lockupContractFactory.address);
 
-
     const LQTYToken = await deployer.loadArtifact("LQTYToken");
     const _lqtyToken = await deployer.deploy(LQTYToken, [
         _communityIssuance.address,
@@ -128,17 +122,15 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     // const _multiTroveGetter = MultiTroveGetter__factory.connect("0x6873877Aa8ac353cA00a443C4Bfbd2a72CA74358", wallet);
     console.log("MultiTroveGetter: ", _multiTroveGetter.address);
 
-    const StakeToken = await deployer.loadArtifact("StakeToken");
-    const _stakeToken = await deployer.deploy(StakeToken, [initStakeToken.address, minterStakeToken.address, 0]);
-    // const _stakeToken = StakeToken__factory.connect("0x81D6FD98A1CD6C3099B3b79996Ab6CFd2a0D7a28", wallet);
-    console.log("StakeToken: ", _stakeToken.address);
-
-    const weth9 = await deployer.loadArtifact("WETH9");
-    const _weth9 = await deployer.deploy(weth9);
-    // const _weth9 = TroveManager__factory.connect('0x73Fd84F354BFb6d21387f75803109298E93899cF', wallet);
-    console.log("WETH9: ", _weth9.address);
-
     console.log("//==================================================================================================================")
+
+    const setFeeToUniswapV2FactoryTX = await _uniswapV2Factory.setFeeTo(feeToFactory.address);
+    console.log("setFeeToUniswapV2FactoryTX: ", setFeeToUniswapV2FactoryTX.hash)
+
+    const lpTokenTx = await _uniswapV2Factory.createPair(_weth9.address, _rusdToken.address);
+    const lpReceipt = await lpTokenTx.wait();
+    const lpToken = lpReceipt.events.filter(({event}) => event == 'PairCreated')[0].args.pair;
+    console.log("lpTokenTx: ", lpToken)
 
     const lqtyStakingTx = await _lqtyStaking.setAddresses(
         _lqtyToken.address,
@@ -236,6 +228,6 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const priceFeedTx = await _priceFeed.updatePrice('1808225102000000000000');
     console.log('priceFeedTx: %s', priceFeedTx.hash);
 
-    const unipoolTX = await _unipool.setParams(_lqtyToken.address, _stakeToken.address, 2 * 30 * 24 * 60 * 60);
-    // console.log('unipoolTX: %s', unipoolTX.hash);
+    const unipoolTX = await _unipool.setParams(_lqtyToken.address, lpToken, 2 * 30 * 24 * 60 * 60);
+    console.log('unipoolTX: %s', unipoolTX.hash);
 }
