@@ -1637,8 +1637,8 @@
       ]
     },
     "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\LQTY\\LQTYToken.sol": {
-      "lastModificationDate": 1680252991480,
-      "contentHash": "1391d8386ecd82a1bc6e404b94650839",
+      "lastModificationDate": 1680253224712,
+      "contentHash": "d9abe12bb54b7c4d1d206b8f10e22503",
       "sourceName": "contracts/LQTY/LQTYToken.sol",
       "solcConfig": {
         "version": "0.8.11",
@@ -2220,7 +2220,7 @@
       ]
     },
     "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\LPRewards\\Unipool.sol": {
-      "lastModificationDate": 1679993911691,
+      "lastModificationDate": 1680258433767,
       "contentHash": "4f0f1094f0b281993cc25109e67ceb42",
       "sourceName": "contracts/LPRewards/Unipool.sol",
       "solcConfig": {
@@ -3301,6 +3301,257 @@
       ],
       "artifacts": [
         "console"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\feedPrice\\OpenOracleData.sol": {
+      "lastModificationDate": 1680495205749,
+      "contentHash": "3902df81ee4ad2054b7167325ceb9d59",
+      "sourceName": "contracts/feedPrice/OpenOracleData.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "OpenOracleData"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\feedPrice\\OpenOracleView.sol": {
+      "lastModificationDate": 1680495205735,
+      "contentHash": "ec9002354bd3836e76b3b6ee6df0ec25",
+      "sourceName": "contracts/feedPrice/OpenOracleView.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [
+        "./OpenOracleData.sol"
+      ],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "OpenOracleView"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\feedPrice\\OpenOraclePriceData.sol": {
+      "lastModificationDate": 1680495205720,
+      "contentHash": "871bb6b039c8925621d94e9da549adb1",
+      "sourceName": "contracts/feedPrice/OpenOraclePriceData.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [
+        "./OpenOracleData.sol"
+      ],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "OpenOraclePriceData"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\UniswapAnchoredView.sol": {
+      "lastModificationDate": 1680495292619,
+      "contentHash": "782ca16f4c910ed46828c70ae7eba4a1",
+      "sourceName": "contracts/uniswap/UniswapAnchoredView.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [
+        "./UniswapConfig.sol",
+        "./UniswapLib.sol",
+        "../feedPrice/OpenOraclePriceData.sol"
+      ],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "UniswapAnchoredView"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\UniswapConfig.sol": {
+      "lastModificationDate": 1680495274905,
+      "contentHash": "efd9d5a4a2f4c32cfb02048e2d005387",
+      "sourceName": "contracts/uniswap/UniswapConfig.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "CErc20",
+        "UniswapConfig"
+      ]
+    },
+    "C:\\Critic\\project\\Contract\\hardhat2\\contracts\\uniswap\\UniswapLib.sol": {
+      "lastModificationDate": 1680495274934,
+      "contentHash": "36b0e3fb175d3c58c848c4b386d04fe3",
+      "sourceName": "contracts/uniswap/UniswapLib.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        },
+        "zksolc": {
+          "version": "1.3.5",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {}
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.11"
+      ],
+      "artifacts": [
+        "FixedPoint",
+        "IUniswapV2Pair",
+        "UniswapV2OracleLibrary"
       ]
     }
   }
